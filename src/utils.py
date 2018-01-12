@@ -105,7 +105,6 @@ def write_events_csv(path, matches, file):
     for m in matches:
         m[Keys.events].sort(key=lambda x: x['timestamp'])
         for event in m[Keys.events]:
-            # print(m[Keys.home_team], event[Keys.teamId])
             event[Keys.teamId] = 'home' if int(m[Keys.home_team]) == int(event[Keys.teamId]) \
                 else 'away'
             if Keys.outcome in event:
@@ -116,7 +115,7 @@ def write_events_csv(path, matches, file):
         filename = str(i) + file + '.csv'
         pd.DataFrame(data=m[Keys.events]).to_csv(filename)
         i += 1
-    os.chdir('../..')
+    os.chdir('..\..')
 
 
 def read_events_csv(path):
@@ -125,7 +124,7 @@ def read_events_csv(path):
     for filename in os.listdir(os.getcwd()):
         new_frame = pd.read_csv(filename)
         frame = frame.append(new_frame)
-    os.chdir('../..')
+    os.chdir('..\..')
     return frame
 
 
@@ -135,8 +134,8 @@ def read_events_list(path):
     for filename in os.listdir(os.getcwd()):
         new_frame = pd.read_csv(filename)
         matches.append(new_frame)
-        # break
-    os.chdir('../..')
+        break
+    os.chdir('..\..')
     return matches
 
 

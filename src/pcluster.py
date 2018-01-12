@@ -60,7 +60,7 @@ class PClustering(BaseEstimator, ClusterMixin):
     """
 
     def __init__(self, k_range=(2, 15), border_threshold=1, method='gaussian',
-                 verbose=False,
+                 verbose=True,
                  random_state=42):
         self.k_range = k_range
         self.border_threshold = border_threshold

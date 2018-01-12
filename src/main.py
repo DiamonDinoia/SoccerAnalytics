@@ -9,6 +9,7 @@ from definitions import *
 from utils import Keys
 from utils import cosine_angle
 from utils import euclidian_distance
+from pcluster import *
 
 InputDir = './data'
 OutputDir = './output'
@@ -64,7 +65,7 @@ def update_types():
     utils.read_all(InputDir, matches)
     utils.write_type_events(MetaDir, matches)
     utils.write_type_outcomes(MetaDir, matches)
-    utils.write_events_csv(SortedDir + '\events', matches, '_events')
+    utils.write_events_csv(SortedDir + '/events', matches, '_events')
 
 
 def filter_actions():
@@ -197,7 +198,7 @@ def print_vector():
         frame.loc[i] = [key, *value.vector]
         i += 1
         print(key + ':', value.vector)
-    frame.to_csv(OutputDir + '/vectors.csv')
+    # frame.to_csv(OutputDir + '/vectors.csv')
 
 
 def filter_velocity():
@@ -235,10 +236,10 @@ def print_aggregate():
     players = [(x[0], x[1], (x[2] / max_value) * 100) for x in players]
     print(*[' '.join([str(y) for y in x]) for x in players], sep='\n')
 
-    frame = pd.DataFrame(columns=['player', 'velocity'])
-    for i, player in enumerate(players):
-        frame.loc[i] = [player[0], player[2]]
-    frame.to_csv(OutputDir + '/velocity.csv')
+    # frame = pd.DataFrame(columns=['player', 'velocity'])
+    # for i, player in enumerate(players):
+    #     frame.loc[i] = [player[0], player[2]]
+    # frame.to_csv(OutputDir + '/velocity.csv')
 
 
 def histograms():
@@ -269,6 +270,22 @@ def histograms():
     plt.close()
 
 
+clusters = PClustering(verbose=True)
+
+
+def clustering():
+    X = []
+    for action in actions:
+        for player in action.players:
+            if player.origin != ():
+                X.append(player.origin)
+            if player.end != ():
+                X.append(player.end)
+    X = np.array(X)
+    clusters.fit(X)
+
+
+
 def main():
     # update_types()
     init_actions()
@@ -282,8 +299,9 @@ def main():
     filter_velocity()
     # histograms()
     normalize_velocity()
-    print_aggregate()
-    print_vector()
+    clustering()
+    # print_aggregate()
+    # print_vector()
     # print_vector()
     # print(*actions, sep='\n')
     # print_velocity()
